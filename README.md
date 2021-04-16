@@ -1,5 +1,5 @@
-## The project is still under construction as there is still alot to be added in it.
-# This Project is a Movie Collection app done with MERN
+# The project is still under construction as there is still alot to be added to it.
+## This Project is a Movie Collection app done with MERN
 
 
 #### Project Specification
