@@ -1,0 +1,75 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+/* body{
+    background: url('./netflix.jpg');
+    background-size:cover ;
+} */
+a{
+    color: white !important;
+}
+.paginationBttns {
+    margin-top: 20px;
+    width: 80%;
+    height: 40px;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    color: white;
+  }
+  .img{
+      height: 400px;
+      width: 300px;
+      object-fit: cover;
+      
+
+  }
+  .paginationBttns a {
+    padding: 10px;
+    margin: 8px;
+    border-radius: 5px;
+    border: 1px solid white;
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  .paginationBttns a:hover {
+    color: #222;
+    background-color: #222;
+  }
+  
+  .paginationActive a {
+    color: white;
+    background-color: #222;
+  }
+  
+  /* .paginationDisabled a {
+  
+  } */
+  .grid{
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-gap:48px 24px;
+  }
+  .card{
+      margin: 15px;
+  }
+@media screen and (max-width:670px) {
+      .card{
+          margin:10px auto;
+      }
+      .heading{
+        margin: 0px 0px 0px 80px;
+      }
+      .img{
+        margin: 0 40px;
+      }
+  }
+  .heading{
+    position: absolute;
+    text-align: center;
+    bottom: 20%;
+  }
