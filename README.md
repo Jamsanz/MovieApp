@@ -22,10 +22,13 @@ How to run and Install this project successfully
     npm install
     ```
 * The above command will install the project depencies on your computer
-* To start the project goto your terminal and run 
+* To start the project goto your terminal, inside the api directory and run 
     ```sh
     npm run dev
     ```
+<<<<<<< HEAD
 
 Database Setup
 * Start a mongod server with port 27017
+
+
