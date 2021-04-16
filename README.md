@@ -1,5 +1,5 @@
-## The project is still under construction as there is still alot to be added to it.
-# This Project is a Movie Collection app done with MERN
+# The project is still under construction as there is still alot to be added to it.
+## This Project is a Movie Collection app done with MERN
 
 
 #### Project Specification
@@ -22,7 +22,7 @@ How to run and Install this project successfully
     npm install
     ```
 * The above command will install the project depencies on your computer
-* To start the project goto your terminal and run 
+* To start the project goto your terminal, inside the api directory and run 
     ```sh
     npm run dev
     ```
