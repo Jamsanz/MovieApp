@@ -3,9 +3,12 @@ import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem} from 'react
 import {NavLink,Link} from 'react-router-dom';
 
 
-const SignedInNav = (props) => {
-  const [collapsed, setCollapsed] = useState(true);
+//Navigation pane with conditional rendering
 
+const SignedInNav = (props) => {
+  //collapse state for Nav Toggling
+  const [collapsed, setCollapsed] = useState(true);
+// Navbar toggler
   const toggleNavbar = () => setCollapsed(!collapsed);
     const white={
         color:"white",
@@ -21,6 +24,7 @@ const SignedInNav = (props) => {
         <NavbarToggler light onClick={toggleNavbar} className="mr-2" />
         <Collapse isOpen={!collapsed} navbar>
           <Nav navbar >
+          {/* conditional rendering of  Nav links */}
           {props.isSignedIn ? <div><NavItem >
               <NavLink  style={white}  to="/Favorites">Favorites</NavLink>
             </NavItem>

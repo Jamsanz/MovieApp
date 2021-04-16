@@ -1,68 +1,85 @@
+const mongoose = require("mongoose");
 const express = require("express");
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const session = require('express-session');
-const passport = require('passport');
-const passportLocalMongoose = require('passport-local-mongoose');
-const findOrCreate = require('mongoose-findorcreate');;
+const cors = require("cors");
+const passport = require("passport");
+const passportLocal = require("passport-local").Strategy;
+const cookieParser = require("cookie-parser");
+const bcrypt = require("bcryptjs");
+const session = require("express-session");
+const bodyParser = require("body-parser");
+const app = express();
+const User = require("./user");
+//----------------------------------------- END OF IMPORTS---------------------------------------------------
+mongoose.connect(
+  "mongodb://localhost:27017/movieApp",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  },
+  () => {
+    console.log("Mongoose Is Connected");
+  }
+);
 
-const app=express();
-
-
-
-app.use(express.static("Public"));
-app.use(bodyParser.urlencoded({extended:true}));
-app.use(session({
-    secret:"Our little secret.",
-    resave:false,
-    saveUninitialized:false
-}));
+// Middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  cors({
+    origin: "http://localhost:3000", // <-- location of the react app were connecting to
+    credentials: true,
+  })
+);
+app.use(
+  session({
+    secret: "secretcode",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+app.use(cookieParser("secretcode"));
 app.use(passport.initialize());
 app.use(passport.session());
+require("./passportConfig")(passport);
 
-mongoose.connect( "mongodb://localhost:27017/movieApp",{useUnifiedTopology:true, useNewUrlParser:true});
-mongoose.set("useCreateIndex", true);
+//----------------------------------------- END OF MIDDLEWARE---------------------------------------------------
 
-const userSchema= new mongoose.Schema({
-    fullname: String,
-    email:String,
-    password:String
+// Routes
+app.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) throw err;
+    if (!user) res.send("No User Exists");
+    else {
+      req.logIn(user, (err) => {
+        if (err) throw err;
+        res.send("success");
+        console.log(req.user);
+      });
+    }
+  })(req, res, next);
 });
-userSchema.plugin(passportLocalMongoose);
-userSchema.plugin(findOrCreate);
-const User = mongoose.model('User',userSchema);
+app.post("/register", (req, res) => {
+  console.log(req.headers);
+  User.findOne({ username: req.body.username }, async (err, doc) => {
+    if (err) throw err;
+    if (doc) res.send("User Already Exists");
+    if (!doc) {
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-passport.use(User.createStrategy());
-
-passport.serializeUser(function(user, done) {
-    done(null, user.id);
+      const newUser = new User({
+        username: req.body.username,
+        password: hashedPassword,
+      });
+      await newUser.save();
+      res.referer;
+    }
   });
-
-  passport.deserializeUser(function(id, done) {
-    User.findById(id, function(err, user) {
-      done(err, user);
-    });
-  });
-
-
-app.get('/api',(req, res)=>{
-    res.sendFile();
-});
-app.post('/config',(req, res)=>{
-  console.log(req.body);
-    const email=req.body.email;
- const password=req.body.password;
- const fName= req.body.fName;
- const lName=req.body.lName;
- const fullname=fName+" "+lName;
-     User.register({username:email}, password).then(resp=>{
-      cons0le.log(resp.json())
-      res.send(resp.json())
-    }).catch(err=>console.log(err));
- 
- console.log(email+" "+password);
 });
 
-app.listen(5000, ()=>{
-    console.log("server running on port 5000");
+//----------------------------------------- END OF ROUTES---------------------------------------------------
+//Start Server
+app.listen(5000, () => {
+  console.log("Server Has Started");
 });
+
+

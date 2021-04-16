@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,7 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Copyright from './Copyright'
-import axios from 'axios';
+import Axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -35,23 +35,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+//registration component
+
 export default function Register(props) {
+  const [registerUsername, setRegisterUsername] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
+  const register = () => {
+    Axios({
+      method: "POST",
+      data: {
+        username: registerUsername,
+        password: registerPassword,
+      },
+      withCredentials: true,
+      url: "http://localhost:5000/register",
+    }).then((res) => console.log(res.referer));
+  };
   const classes = useStyles();
-  // const fName = document.getElementById("F_Name").value;
-  //     const lName= document.getElementById("L_Name").value;
-  //     const fullname=fName+" "+lName;
-  // const[name, setName]
-  // const handleClick=()=>{
-  //   axios.post('/config',{
-  //     fullname:"Muhammad Sani",
-  //     email: "Jamiludeeen@gmail.com",
-  //     password: "Muhammad"
-
-  //   }).then((res)=>{
-  //     console.log(res)
-  //   });
-  // }
-
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -62,7 +62,7 @@ export default function Register(props) {
         <Typography component="h1" variant="h5">
           Register
         </Typography>
-        <form className={classes.form} action="/config" method="POST" noValidate>
+        <form className={classes.form} action="/register" method="POST" noValidate>
           <TextField
             variant="outlined"
             margin="normal"
@@ -71,7 +71,7 @@ export default function Register(props) {
             id="F_name"
             label="First Name"
             name="fName"
-            // onChange={handleChange}
+            
             autoFocus
             type="text"
           />
@@ -94,6 +94,7 @@ export default function Register(props) {
             label="Email Address"
             name="email"
             type="email"
+            onChange={(e) => setRegisterUsername(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -104,6 +105,7 @@ export default function Register(props) {
             label="Password"
             type="password"
             id="password"
+            onChange={(e) => setRegisterPassword(e.target.value)}
           />
           <Button
             type="submit"
@@ -111,7 +113,7 @@ export default function Register(props) {
             variant="contained"
             color="primary"
             className={classes.submit}
-            // onClick={handleClick}
+           onClick={register}
           >
             Register
           </Button>

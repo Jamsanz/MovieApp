@@ -51,9 +51,15 @@ const Cards=(props)=> {
   const displayCard=movies.slice(pagesVisited, pagesVisited + cardsPerPage).map((movie) => {
     return (
     <div className="card" style={{boxShadow:"0px 2px 1px -1px rgb(0 0 0 / 20%)", height:"400px", width:"300px",display:"inline-block"}} >
-          <NavLink to={`/movie/${movie}`}><img className="img" src={movie.posterPath} alt="movie"/></NavLink>
+          <NavLink to={`/movie/`}><img className="img" src={movie.posterPath}  alt="movie"/></NavLink>
 
-              <h1 className="heading">{movie.title}</h1>movie.title
+              <h1 style={{color:"white"}} className="heading">{movie.title}</h1>
+              {/* <AddIcon
+              onClick={()=>{
+        props.setFavorites((prev)=>{
+         return [...prev, movie]
+        });}}
+               /> */}
               
         {/* <Card className={classes.root}>
       <CardHeader
@@ -76,10 +82,7 @@ const Cards=(props)=> {
           {movie.overview}
         </Typography>
       </CardContent>
-      <CardActions onClick={()=>{
-        props.setFavorites((prev)=>{
-         return [...prev, movie]
-        });
+      <CardActions 
       }} disableSpacing>
         <IconButton aria-label="add to favorites">
        <label>Add to Favorites</label> &nbsp;
