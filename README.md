@@ -26,7 +26,6 @@ How to run and Install this project successfully
     ```sh
     npm run dev
     ```
-<<<<<<< HEAD
 
 Database Setup
 * Start a mongod server with port 27017
