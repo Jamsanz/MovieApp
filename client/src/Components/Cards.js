@@ -1,22 +1,12 @@
 import React,{useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import AddIcon from '@material-ui/icons/Add';
-import { Link } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import '../App.css';
-import { Container, Row, Col } from 'reactstrap';
 import MovieDetails from './MovieDetails';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { userSelector } from '../store/store';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,19 +32,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Cards=(props)=> {
+  const user=useSelector(userSelector);
   const {token, movies}=props;
-  console.log(movies);
-  
-  // const classes = useStyles();
-  // const [card, setCard]=useState(movies.slice(0,6));
   const[pageNumber, setPageNumber]=useState(0);
   const [showDetails, setShowDetails] = useState(false);
   const [movie, setMovie] = useState();
   const cardsPerPage=10;
   const pagesVisited= pageNumber * cardsPerPage;
-  // style={{, display:"inline-block", height:"400px", width:"300px", background:`url(${movie.posterPath})`, backgroundSize:"cover" }
-   const handleFavorite=(movie)=>{
-    //  console.log(movie);
+  const handleFavorite=(movie)=>{
     axios.post('http://localhost:5000/',{movie},{
       headers:{
         "Content-type":"application/json",
@@ -68,6 +53,7 @@ const Cards=(props)=> {
              }
            })
    }
+   user && console.log(user);
   const handleShowDetails=()=>{
     setShowDetails(!showDetails);
   }

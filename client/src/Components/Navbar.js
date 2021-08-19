@@ -1,6 +1,5 @@
 import React,{useState, useEffect} from 'react'
 import {Link} from 'react-router-dom'
-// import {Collapse, Nav, NavItem, NavLink,} from 'reactstrap'
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -10,12 +9,12 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
-// import IconButton from '@material-ui/core/IconButton';
-// import MenuIcon from '@material-ui/icons/Menu';
 import Search from './search';
 import axios from "axios";
 import Favorites from './Favorites'
 import { useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
+import {deleteUser} from '../store/actions/actions'
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -64,6 +63,8 @@ function TabPanel(props) {
   }));
 
 function Navbar(props) {
+    const user=useSelector(state=>state.user);
+    const dispatch=useDispatch();
     const history=useHistory();
     const {topRated, mostPopular, nowPlaying, upcoming ,Cards} =props;
     const [favorites, setFavorites]=useState([]);
@@ -83,6 +84,7 @@ function Navbar(props) {
   };
   const logOut=()=>{
     window.localStorage.removeItem('token');
+    dispatch(deleteUser());
     history.push('/');
   }
   const api="56cfd5fc378e636200b9efde71338622";
@@ -120,7 +122,7 @@ function Navbar(props) {
         <Toolbar>
          <i className="material-icons" style={{margin:"0px 5px 0px 10px"}}>light</i>
           <Typography variant="h6" className={classes.title}>
-            <Link to="/">MovieWorld</Link>
+            <Link to="/">Hi {user.name}, welcome to the MovieWorld</Link>
           </Typography>
          
           <input style={{width: "30%", color:"white"}} type="text" placeholder="Search" onKeyPress={(e)=>{

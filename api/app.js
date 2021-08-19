@@ -128,9 +128,9 @@ const auth=(req, res, next)=>{
                     res.json({
                       token,
                       user:{
-                      id: user.id,
-                      name:user.fullName,
-                      email: user.username
+                      id: foundUser.id,
+                      name:foundUser.fullName,
+                      email: foundUser.username
 
                     }})
                   }
