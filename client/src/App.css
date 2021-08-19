@@ -44,24 +44,24 @@ a{
   }
   
   .paginationActive a {
-    color: white;
+    color: white;   
     background-color: #222;
   }
   
   /* .paginationDisabled a {
   
   } */
-  .grid{
+  /* .grid{
     grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
     grid-template-rows: 1fr 1fr 1fr;
     grid-gap:48px 24px;
-  }
-  .row{
+  } */
+  /* .row{
     display: flex !important;
     justify-content: space-evenly !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
-  }
+  } */
   /* .card{
       margin: 15px;
   } */

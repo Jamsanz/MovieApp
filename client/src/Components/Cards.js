@@ -80,19 +80,17 @@ const Cards=(props)=> {
       // 
       return (
       <div
-        className="card col s12 m6 l4 "
+        className="card col s12 m6 l4"
          style={{}}
-        // style={{boxShadow:"0px 2px 1px -1px rgb(0 0 0 / 20%)", height:"400px", width:"300px",display:"inline-block", cursor:"pointer"}}
-        
       >
     <div style={{display:"flex", padding:"15px"}} className="card-title">
-            <div style={{borderRadius:"50%", height:"30px", width:"30px", marginRight:"3%", backgroundColor:"#F44336"}}><h4 style={{textAlign:"center", color:"white"}}>{movie.title.substring(0,1)}</h4></div>
+            <div style={{borderRadius:"50%", height:"30px", width:"30px", marginRight:"3%", backgroundColor:"#F44336"}}>
+            <h4 style={{textAlign:"center", color:"white"}}>{movie.title.substring(0,1)}</h4>
+            </div>
             <span style={{display:"block", width:"100%", fontSize:"0.875rem", fontFamily:` "Roboto", "Helvetica", "Arial", sans-serif`, fontWeight:400, lineHeight: 1.43, letterSpacing: `0.01071em` }}>{movie.title}
             <span style={{cursor:"pointer"}} className="activator"><i class="material-icons right">more_vert</i></span>
             <span style={{color:"#00008A", display:"block"}}>{movie.release_date}</span>
             </span>
-            
-            
            </div>
 
         <div className="card-image">

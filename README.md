@@ -5,9 +5,9 @@
 #### Project Specification
 - [x] Login/Register
 - [x] Paginated list of movies (10 per page)
-- [ ] Details of each Movie when clicked
-- [ ] Adding to Favorites
-- [ ] Managing Favorites
+- [x] Details of each Movie when clicked
+- [x] Adding to Favorites
+- [x] Managing Favorites
 
 How to run and Install this project successfully
 
