@@ -15,6 +15,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Search from './search';
 import axios from "axios";
 import Favorites from './Favorites'
+import { useHistory } from "react-router-dom";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -63,6 +64,7 @@ function TabPanel(props) {
   }));
 
 function Navbar(props) {
+    const history=useHistory();
     const {topRated, mostPopular, nowPlaying, upcoming ,Cards} =props;
     const [favorites, setFavorites]=useState([]);
     const [showFavorites, setShowFavorites]=useState(false);
@@ -72,15 +74,6 @@ function Navbar(props) {
     const [showSearch, setShowSearch]=useState(false);
     const classes = useStyles();
 
-    console.log(topRated);
-    
-    // const [movie, setMovie]=useState([]);
-    // console.log(window.localStorage.removeItem('token'));
-    // if (window.localStorage.getItem('token')) {
-    //   console.log('true');
-    // } else {
-    //   console.log(false);
-    // }
     const token=window.localStorage.getItem('token');
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -90,7 +83,7 @@ function Navbar(props) {
   };
   const logOut=()=>{
     window.localStorage.removeItem('token');
-    window.location.href="/";
+    history.push('/');
   }
   const api="56cfd5fc378e636200b9efde71338622";
   const handleClick=()=>{
@@ -123,7 +116,7 @@ function Navbar(props) {
   
     return (
         <header>
-        <AppBar className="indigo darken-4" position="static">
+        <AppBar className="indigo darken-4" position="fixed">
         <Toolbar>
          <i className="material-icons" style={{margin:"0px 5px 0px 10px"}}>light</i>
           <Typography variant="h6" className={classes.title}>
@@ -137,15 +130,10 @@ function Navbar(props) {
           {token ? <div><Button onClick={handleClick2} color="inherit">Favorites</Button>
           <Button onClick={logOut} color="inherit">Log Out</Button></div>: 
           <div>
-          <Button onClick={()=>window.location.href="/SignIn"} color="inherit">Sign In</Button>
-          <Button onClick={()=>window.location.href="/Register"}  color="inherit">Sign Up</Button>
-          </div>}
-          
-          
+          <Button onClick={()=>history.push('/SignIn')} color="inherit">Sign In</Button>
+          <Button onClick={()=>history.push('/Register')} color="inherit">Sign Up</Button>
+          </div>}     
         </Toolbar>
-      </AppBar>
-        <AppBar className="indigo darken-4" position="static">
-      
                { showFavorites ? <Button onClick={handleClick2} color="inherit">Home</Button> : <Tabs value={value} onChange={handleChange} centered variant="scrollable" scrollButtons="auto" aria-label="simple tabs example" >
                     <Tab label="Now Playing" wrapped {...a11yProps(0)} />
                     <Tab label="Upcoming" wrapped {...a11yProps(1)} />
@@ -154,39 +142,33 @@ function Navbar(props) {
                     
                     
                 </Tabs>}
-               {/* { showSearch ? <Button onClick={handleClick2} color="inherit">Home</Button> : <Tabs value={value} onChange={handleChange} centered variant="scrollable" scrollButtons="auto" aria-label="simple tabs example" >
-                    <Tab label="Now Playing" wrapped {...a11yProps(0)} />
-                    <Tab label="Upcoming" wrapped {...a11yProps(1)} />
-                    <Tab label="Most Popular" wrapped {...a11yProps(2)} />
-                    <Tab label="Top Rated" wrapped {...a11yProps(3)} />
-                    
-                    
-                </Tabs>} */}
-                </AppBar>
-                {showSearch ? <div className="row"> <Search token={token} movies={search} /> </div>: showFavorites ?  <div className="row"><div><Favorites setFavorites={setFavorites} movies={favorites} /></div></div>  : <div>
-                <TabPanel value={value} index={0}>
-                <div className="row">
-                    
+      </AppBar>
+      
+                {showSearch ? 
+                <div className="row"> <Search token={token} movies={search} /> </div>
+                 :
+                 showFavorites ?  <div className="row"><div><Favorites setFavorites={setFavorites} movies={favorites} /></div></div>  : <div>
+                <TabPanel value={value} index={0} >
+                <div className="row" style={{marginTop:"100px"}}>
                     <Cards token={token}  movies={nowPlaying} />
-                    
                 </div>
                 </TabPanel>
                 <TabPanel value={value} index={1}>
-                <div className="row">
+                <div className="row" style={{marginTop:"100px"}}>
                     
                     <Cards token={token}   movies={upcoming} />
                     
                 </div>
                 </TabPanel>
                 <TabPanel value={value} index={2}>
-                <div className="row">
+                <div className="row" style={{marginTop:"100px"}}>
                     
                     <Cards token={token}  movies={mostPopular} />
                     
                 </div>
                 </TabPanel>
             <TabPanel value={value} index={3}>
-                <div className="row">
+                <div className="row" style={{marginTop:"100px"}}>
                     
                     <Cards token={token}  movies={topRated} />
                 </div> 

@@ -1,14 +1,47 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require('mongoose');
 const bcrypt= require("bcryptjs")
 const cors =require("cors");
-// const config = require('config');
 const jwt = require('jsonwebtoken');
-
 const app=express();
+swaggerJsdoc = require("swagger-jsdoc"),
+swaggerUi = require("swagger-ui-express");
 
 app.use(cors());
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Movie World Express API with Swagger",
+      version: "0.1.0",
+      description:
+        "This is an API made for the MOVIEWORLD app with NodeJs and Express",
+      license: {
+        name: "MIT",
+        url: "https://spdx.org/licenses/MIT.html",
+      },
+      contact: {
+        name: "Movie World",
+        url: "https://logrocket.com",
+        email: "info@email.com",
+      },
+    },
+    servers: [
+      {
+        url: "http://localhost:5000/login",
+      },
+    ],
+  },
+  apis: ["./routes/user.js"],
+};
 
+const specs = swaggerJsdoc(options);
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs, { explorer: true })
+);
 // app.use((req, res, next) => {
 //   res.setHeader('Access-Control-Allow-Origin', '*'); // to enable calls from every domain 
 //   res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE'); // allowed actiosn
@@ -21,13 +54,17 @@ app.use(cors());
 //   next(); // call next middlewer in line
 // });
 
-const jwtSecret="sl_myJwtScret";
+
 
 
 app.use(express.static("Public"));
 app.use(express.json());
 
-mongoose.connect( "mongodb://localhost:27017/movieApp",{useUnifiedTopology:true, useNewUrlParser:true});
+mongoose.connect( "mongodb://localhost:27017/movieApp",{useUnifiedTopology:true, useNewUrlParser:true},(err)=>{
+  if (!err) {
+    console.log("Mongo Server Connected Successfully");
+  }
+});
 mongoose.set("useCreateIndex", true);
 mongoose.set('useFindAndModify', false);
 
@@ -45,18 +82,16 @@ const User = mongoose.model('User',userSchema);
 
 const auth=(req, res, next)=>{
     const token = req.headers['x-auth-token'];
-  console.log(token);
     if(!token){
       res.status(401).json({msg: 'No token, authorization denied'});
     }else{
-      const decode=jwt.verify(token, jwtSecret, (err, decoded)=>{
+      jwt.verify(token, process.env.JWT_SECRET, (err, decoded)=>{
         if (err){
           console.log(err);
           res.status(400).json({msg: 'Token not valid'})
         }
         else{
           // res.status(200).json({msg: 'Valid token'});
-          console.log(decoded);
           req.user=decoded;
           next();
         }
@@ -70,12 +105,11 @@ const auth=(req, res, next)=>{
 
   app.post('/login',(req, res)=>{
 
-    const email=req.body.email;
-    const password=req.body.password;
+    const {email, password}=req.body;
 
     const user = new User({
-        username:req.body.email,
-        password:req.body.password
+        username:email,
+        password:password
       });
       
       User.findOne({username:email},(err, foundUser)=>{
@@ -87,7 +121,7 @@ const auth=(req, res, next)=>{
         } else {
             bcrypt.compare(user.password, foundUser.password).then(result=>{
               if (result) {
-                jwt.sign({id: foundUser.id, name: foundUser.fullName}, jwtSecret,{expiresIn:36000}, (err, token)=>{
+                jwt.sign({id: foundUser.id, name: foundUser.fullName}, process.env.JWT_SECRET,{expiresIn:36000}, (err, token)=>{
                   if(err){
                     console.log(err);
                   }else{
@@ -112,16 +146,15 @@ const auth=(req, res, next)=>{
     
 });
 app.post('/register',(req, res)=>{
-  console.log(req.body);
-    const email=req.body.email;
- const password=req.body.password;
- const fullName=req.body.fName+" "+req.body.lName;
+
+  const {email:username, password, fName, lName}=req.body;
+ const fullName=fName+" "+lName;
  const user = new User({
     fullName,
-    username: email,
+    username,
     password
  });
-    User.findOne({username:email},(err, foundUser)=>{
+    User.findOne({username},(err, foundUser)=>{
       if (err) {
         console.log(err);
       } else {
@@ -138,7 +171,7 @@ app.post('/register',(req, res)=>{
                   if (err) {
                     console.log(err);
                   } else {
-                    jwt.sign({id: user.id, name: user.fullName}, jwtSecret,{expiresIn:36000}, (err, token)=>{
+                    jwt.sign({id: user.id, name: user.fullName}, process.env.JWT_SECRET,{expiresIn:36000}, (err, token)=>{
                       if(err){
                         console.log(err);
                       }else{
@@ -148,7 +181,6 @@ app.post('/register',(req, res)=>{
                           id: user.id,
                           name:user.fullName,
                           email: user.username
-    
                         }})
                       }
                     })
@@ -162,8 +194,6 @@ app.post('/register',(req, res)=>{
         }
       }
     })
-  
- console.log(email+" "+password);
 });
 
 app.get('/user', auth, (req, res)=>{
@@ -173,15 +203,7 @@ app.get('/user', auth, (req, res)=>{
 });
 
 app.post('/', auth, (req, res)=>{
-  // console.log(req.user.id);
   const {movie} = req.body;
-  // User.findOne({movie:movie},(err, result)=>{
-  //   if (err) {
-  //     console.log(err);
-  //   } else {
-  //     console.log(result)
-  //   }
-  // });
     User.findOneAndUpdate({_id:req.user.id},{$push: {movie:movie}}, (err, foundUser)=>{
       if (err) {
         console.log(err);
